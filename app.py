@@ -513,9 +513,15 @@ def notif_delete():
     return redirect(url_for("profile", username=g.user["username"]))
 
 
-if __name__ == "__main__":
+def bootstrap():
     db.init_db()
     os.makedirs(os.path.join(BASE, "tasks"), exist_ok=True)
     os.makedirs(os.path.join(BASE, "u"), exist_ok=True)
     auth.purge_expired_sessions()
+
+
+bootstrap()
+
+
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False)
