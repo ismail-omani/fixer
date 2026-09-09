@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}{{ task.title }} — {{ t('site.name') }}{% endblock %}
+{% block content %}
+<div class="task-header">
+  <h1>{{ task.title }}</h1>
+  <div class="meta">
+    <span class="pill {{ task.status }}">{{ t('task.' ~ task.status) }}</span>
+    <span class="task-id">{{ task.id }}</span>
+    <span class="muted">{{ t('task.created', date=task.created_at.replace('T', ' ')[:16]) }}</span>
+  </div>
+</div>
+
+{% if is_refused %}
+  <div class="flash err">{{ t('task.you_refused') }}</div>
+{% endif %}
+
+{% if task.status == 'active' and is_author %}
+  <div class="actions">
+    <a class="btn" href="{{ url_for('edit_task', task_id=task.id) }}">{{ t('task.edit') }}</a>
+    <form method="post" action="{{ url_for('delete_task', task_id=task.id) }}" onsubmit="return confirm('{{ t('task.delete_confirm') }}')" class="inline">
+      <input type="hidden" name="csrf" value="{{ g.csrf }}">
+      <button type="submit" class="btn danger">{{ t('task.delete') }}</button>
+    </form>
+  </div>
+{% endif %}
+
+<div class="card body">{{ body_html|safe }}</div>
+
+{% if task.files %}
+<div class="card">
+  <h3>{{ t('task.files') }}</h3>
+  <ul class="files">
+    {% for f in task.files %}
+    <li>
+      <a href="{{ url_for('download_file', task_id=task.id, filename=f) }}">&#128196; {{ f }}</a>
+      <span class="muted">{{ t('task.download') }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{% if can_respond %}
+  <div class="actions">
+    <form method="post" action="{{ url_for('respond', task_id=task.id) }}">
+      <input type="hidden" name="csrf" value="{{ g.csrf }}">
+      <button type="submit" class="btn primary">{{ t('task.respond') }}</button>
+    </form>
+  </div>
+{% endif %}
+
+{% if task.status == 'booked' and (is_author or is_executor) %}
+  <div class="card">
+    <h3>{{ t('task.booked') }}</h3>
+    {% if completion_req and completion_req != g.user['username'] %}
+      <p>{{ t('task.complete_pending') }}</p>
+      <div class="actions">
+        <form method="post" action="{{ url_for('complete_respond', task_id=task.id) }}" class="inline">
+          <input type="hidden" name="csrf" value="{{ g.csrf }}">
+          <input type="hidden" name="action" value="accept">
+          <button type="submit" class="btn primary">{{ t('task.complete_accept') }}</button>
+        </form>
+        <form method="post" action="{{ url_for('complete_respond', task_id=task.id) }}" class="inline">
+          <input type="hidden" name="csrf" value="{{ g.csrf }}">
+          <input type="hidden" name="action" value="reject">
+          <button type="submit" class="btn danger">{{ t('task.complete_reject') }}</button>
+        </form>
+      </div>
+    {% elif completion_req == g.user['username'] %}
+      <p class="muted">{{ t('task.complete_pending') }}</p>
+    {% else %}
+      <div class="actions">
+        <form method="post" action="{{ url_for('complete_request', task_id=task.id) }}">
+          <input type="hidden" name="csrf" value="{{ g.csrf }}">
+          <button type="submit" class="btn">{{ t('task.complete_request') }}</button>
+        </form>
+      </div>
+    {% endif %}
+
+    {% if is_author %}
+      <form method="post" action="{{ url_for('refuse_executor', task_id=task.id) }}" class="reason-form">
+        <input type="hidden" name="csrf" value="{{ g.csrf }}">
+        <input type="hidden" name="username" value="{{ task.booked_by }}">
+        <input type="text" name="reason" placeholder="{{ t('task.reason') }}">
+        <button type="submit" class="btn danger">{{ t('task.refuse_executor') }}</button>
+      </form>
+    {% endif %}
+    {% if is_executor %}
+      <form method="post" action="{{ url_for('refuse_self', task_id=task.id) }}" class="reason-form">
+        <input type="hidden" name="csrf" value="{{ g.csrf }}">
+        <input type="text" name="reason" placeholder="{{ t('task.reason') }}">
+        <button type="submit" class="btn danger">{{ t('task.refuse_self') }}</button>
+      </form>
+    {% endif %}
+  </div>
+{% endif %}
+
+<div class="card executors">
+  <p><strong>{{ t('task.author') }}:</strong> <a href="{{ url_for('profile', username=task.author) }}">{{ task.author }}</a></p>
+  <p><strong>{{ t('task.executors') }}:</strong></p>
+  {% for r in task.refusals %}
+    <p class="exec-line">
+      <a href="{{ url_for('profile', username=r.username) }}">{{ r.username }}</a>
+      <span class="pill refused">{{ t('task.refused') }}</span>
+      {% if r.reason %}<span class="muted">— {{ r.reason }}</span>{% endif %}
+    </p>
+  {% endfor %}
+  {% if task.booked_by %}
+    <p class="exec-line">
+      <a href="{{ url_for('profile', username=task.booked_by) }}">{{ task.booked_by }}</a>
+      <span class="pill {{ 'done' if task.status == 'completed' else 'booked' }}">
+        {{ t('task.done') if task.status == 'completed' else t('task.current') }}
+      </span>
+    </p>
+  {% endif %}
+</div>
+{% endblock %}

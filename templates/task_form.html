@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{ t('form.create_title') if not task else t('form.edit_title') }} — {{ t('site.name') }}{% endblock %}
+{% block content %}
+<h1>{{ t('form.create_title') if not task else t('form.edit_title') }}</h1>
+<form method="post" enctype="multipart/form-data" class="card form" action="{{ url_for('new_task') if not task else url_for('edit_task', task_id=task.id) }}">
+  <input type="hidden" name="csrf" value="{{ g.csrf }}">
+  <label>{{ t('form.title_label') }}
+    <input type="text" name="title" value="{{ task.title if task else '' }}" required maxlength="120">
+  </label>
+  <label>{{ t('form.text_label') }}
+    <textarea name="text" rows="10">{{ task.body if task else '' }}</textarea>
+  </label>
+
+  {% if task and task.files %}
+  <fieldset>
+    <legend>{{ t('form.keep_files') }}</legend>
+    {% for f in task.files %}
+    <label class="check">
+      <input type="checkbox" name="delete_files" value="{{ f }}" checked>
+      {{ f }}
+    </label>
+    {% endfor %}
+  </fieldset>
+  {% endif %}
+
+  <label>{{ t('form.files_label') }}</label>
+  <div class="dropzone" id="dropzone">
+    <p>{{ t('form.drop_hint') }}</p>
+    <input type="file" name="files" id="file-input" multiple>
+    <div class="file-list"></div>
+  </div>
+
+  <div class="actions">
+    <button type="submit" class="btn primary">{{ t('form.create') if not task else t('form.save') }}</button>
+    <a class="btn" href="{{ url_for('task_page', task_id=task.id) if task else url_for('index') }}">{{ t('form.cancel') }}</a>
+  </div>
+</form>
+{% endblock %}

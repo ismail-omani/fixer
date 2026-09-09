@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}{{ t('auth.tab_login') if mode == 'login' else t('auth.tab_register') }} — {{ t('site.name') }}{% endblock %}
+{% block content %}
+<div class="auth">
+  <div class="tabs">
+    <a href="{{ url_for('login') }}" class="{{ 'on' if mode == 'login' }}">{{ t('auth.tab_login') }}</a>
+    <a href="{{ url_for('register') }}" class="{{ 'on' if mode == 'register' }}">{{ t('auth.tab_register') }}</a>
+  </div>
+
+  {% if error %}<div class="flash err">{{ t(error) }}</div>{% endif %}
+
+  {% if mode == 'login' %}
+  <form method="post" class="card form">
+    <label>{{ t('auth.username') }}
+      <input type="text" name="username" required autofocus>
+    </label>
+    <label>{{ t('auth.password') }}
+      <input type="password" name="password" required>
+    </label>
+    <button type="submit" class="btn primary">{{ t('auth.login_btn') }}</button>
+    <p class="muted">{{ t('auth.no_account') }} <a href="{{ url_for('register') }}">{{ t('auth.tab_register') }}</a></p>
+  </form>
+  {% else %}
+  <form method="post" class="card form">
+    <label>{{ t('auth.username') }}
+      <input type="text" name="username" required autofocus pattern="[A-Za-z0-9_]{1,32}" title="{{ t('auth.username_hint') }}">
+    </label>
+    <label>{{ t('auth.password') }}
+      <input type="password" name="password" required minlength="6">
+    </label>
+    <label>{{ t('auth.password2') }}
+      <input type="password" name="password2" required minlength="6">
+    </label>
+    <fieldset>
+      <legend>{{ t('auth.contacts') }} <span class="req">*</span></legend>
+      <div id="contact-rows">
+        <div class="contact-row">
+          <input type="text" name="service" placeholder="{{ t('auth.service_placeholder') }}" required>
+          <input type="text" name="contact" placeholder="{{ t('auth.contact_placeholder') }}" required>
+          <button type="button" class="btn sm plus" data-add title="{{ t('auth.add_contact_row') }}">＋</button>
+          <button type="button" class="btn sm minus hidden" data-remove title="{{ t('auth.remove_row') }}">−</button>
+        </div>
+      </div>
+    </fieldset>
+    <button type="submit" class="btn primary">{{ t('auth.register_btn') }}</button>
+    <p class="muted">{{ t('auth.have_account') }} <a href="{{ url_for('login') }}">{{ t('auth.tab_login') }}</a></p>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

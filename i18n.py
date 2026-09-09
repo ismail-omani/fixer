@@ -1,0 +1,148 @@
+LANGUAGES = ("ru", "en")
+
+STRINGS = {
+    "site.name": {"ru": "Fixer", "en": "Fixer"},
+    "nav.home": {"ru": "Главная", "en": "Home"},
+    "nav.new_task": {"ru": "+ Задание", "en": "+ Task"},
+    "nav.profile": {"ru": "Профиль", "en": "Profile"},
+    "nav.logout": {"ru": "Выйти", "en": "Logout"},
+    "nav.login": {"ru": "Войти", "en": "Log in"},
+
+    "auth.tab_login": {"ru": "Вход", "en": "Login"},
+    "auth.tab_register": {"ru": "Регистрация", "en": "Register"},
+    "auth.username": {"ru": "Логин", "en": "Username"},
+    "auth.username_hint": {"ru": "Латинские буквы, цифры, подчёркивания", "en": "Latin letters, digits, underscores"},
+    "auth.password": {"ru": "Пароль", "en": "Password"},
+    "auth.password2": {"ru": "Повторите пароль", "en": "Repeat password"},
+    "auth.contacts": {"ru": "Контакты для связи", "en": "Contacts"},
+    "auth.service_placeholder": {"ru": "Сервис (напр. Telegram)", "en": "Service (e.g. Telegram)"},
+    "auth.contact_placeholder": {"ru": "Контакт (напр. @username)", "en": "Contact (e.g. @username)"},
+    "auth.add_contact_row": {"ru": "Добавить контакт", "en": "Add contact"},
+    "auth.remove_row": {"ru": "Удалить", "en": "Remove"},
+    "auth.login_btn": {"ru": "Войти", "en": "Log in"},
+    "auth.register_btn": {"ru": "Зарегистрироваться", "en": "Sign up"},
+    "auth.have_account": {"ru": "Уже есть аккаунт? Войти", "en": "Already have an account? Log in"},
+    "auth.no_account": {"ru": "Нет аккаунта? Зарегистрироваться", "en": "No account? Register"},
+
+    "errors.username_invalid": {"ru": "Логин может содержать только латиницу, цифры и нижние подчёркивания (до 32 символов)", "en": "Username may contain only latin letters, digits and underscores (max 32 chars)"},
+    "errors.username_admin": {"ru": "Логин не может содержать слово «admin»", "en": "Username must not contain the word \"admin\""},
+    "errors.password_short": {"ru": "Пароль слишком короткий (минимум 6 символов)", "en": "Password is too short (min 6 characters)"},
+    "errors.password_mismatch": {"ru": "Пароли не совпадают", "en": "Passwords do not match"},
+    "errors.username_taken": {"ru": "Регистрация не удалась. Попробуйте другой логин.", "en": "Registration failed. Try a different username."},
+    "errors.invalid_credentials": {"ru": "Неверный логин или пароль", "en": "Invalid username or password"},
+    "errors.too_many_attempts": {"ru": "Слишком много попыток. Подождите минуту.", "en": "Too many attempts. Wait a minute."},
+    "errors.invalid_input": {"ru": "Некорректные данные", "en": "Invalid input"},
+    "errors.task_not_found": {"ru": "Задание не найдено", "en": "Task not found"},
+    "errors.not_author": {"ru": "Это не ваше задание", "en": "This is not your task"},
+    "errors.not_allowed": {"ru": "Действие запрещено", "en": "Action not allowed"},
+    "errors.refused": {"ru": "Вам отказано в этом задании", "en": "You were refused on this task"},
+    "errors.booked": {"ru": "Задание уже забронировано", "en": "The task is already booked"},
+    "errors.no_respond": {"ru": "Откликнуться нельзя", "en": "You cannot respond"},
+    "errors.title_required": {"ru": "Укажите название задания", "en": "Task title is required"},
+    "errors.file_too_big": {"ru": "Файл слишком большой (макс. {size} МБ)", "en": "File is too large (max {size} MB)"},
+    "errors.avatar_type": {"ru": "Недопустимый тип файла для аватара", "en": "Invalid avatar file type"},
+    "errors.avatar_size": {"ru": "Аватар слишком большой (макс. 2 МБ)", "en": "Avatar is too large (max 2 MB)"},
+    "errors.contact_invalid": {"ru": "Некорректный контакт", "en": "Invalid contact"},
+    "errors.contacts_required": {"ru": "Добавьте хотя бы один контакт (сервис и контакт)", "en": "Add at least one contact (service and contact)"},
+
+    "index.search_placeholder": {"ru": "Поиск: название, текст, номер, файлы…", "en": "Search: title, text, number, files…"},
+    "index.search_btn": {"ru": "Найти", "en": "Search"},
+    "index.tab_active": {"ru": "Активные", "en": "Active"},
+    "index.tab_completed": {"ru": "Завершённые", "en": "Completed"},
+    "index.empty_active": {"ru": "Пока нет активных заданий. Создайте первое!", "en": "No active tasks yet. Create the first one!"},
+    "index.empty_completed": {"ru": "Завершённых заданий пока нет", "en": "No completed tasks yet"},
+    "index.empty_search": {"ru": "Ничего не найдено", "en": "Nothing found"},
+    "index.results": {"ru": "Найдено: {count}", "en": "Found: {count}"},
+    "index.booked": {"ru": "Забронировано", "en": "Booked"},
+    "index.completed": {"ru": "Завершено", "en": "Completed"},
+
+    "task.respond": {"ru": "Откликнуться", "en": "Respond"},
+    "task.author": {"ru": "Автор", "en": "Author"},
+    "task.executors": {"ru": "Исполнители", "en": "Executors"},
+    "task.current": {"ru": "ТЕКУЩИЙ", "en": "CURRENT"},
+    "task.refused": {"ru": "ОТКАЗ", "en": "REFUSED"},
+    "task.done": {"ru": "ВЫПОЛНИЛ", "en": "DONE"},
+    "task.files": {"ru": "Файлы", "en": "Files"},
+    "task.no_files": {"ru": "Файлов нет", "en": "No files"},
+    "task.download": {"ru": "Скачать", "en": "Download"},
+    "task.edit": {"ru": "Редактировать", "en": "Edit"},
+    "task.delete": {"ru": "Удалить", "en": "Delete"},
+    "task.delete_confirm": {"ru": "Удалить задание безвозвратно?", "en": "Delete the task permanently?"},
+    "task.complete_request": {"ru": "Завершить задание", "en": "Complete the task"},
+    "task.complete_pending": {"ru": "Запрос на завершение отправлен, ожидает подтверждения", "en": "Completion request sent, waiting for confirmation"},
+    "task.complete_accept": {"ru": "Подтвердить завершение", "en": "Confirm completion"},
+    "task.complete_reject": {"ru": "Отклонить", "en": "Reject"},
+    "task.refuse_executor": {"ru": "Отказаться от исполнителя", "en": "Refuse the executor"},
+    "task.refuse_self": {"ru": "Отказаться", "en": "Refuse"},
+    "task.reason": {"ru": "Причина (необязательно)", "en": "Reason (optional)"},
+    "task.send": {"ru": "Отправить", "en": "Send"},
+    "task.you_executor": {"ru": "Вы — исполнитель", "en": "You are the executor"},
+    "task.you_author": {"ru": "Вы — автор", "en": "You are the author"},
+    "task.you_refused": {"ru": "Вам отказано в этом задании", "en": "You were refused on this task"},
+    "task.free": {"ru": "Свободно", "en": "Free"},
+    "task.active": {"ru": "Свободно", "en": "Free"},
+    "task.booked": {"ru": "Забронировано", "en": "Booked"},
+    "task.completed": {"ru": "Завершено", "en": "Completed"},
+    "task.created": {"ru": "Создано: {date}", "en": "Created: {date}"},
+
+    "form.create_title": {"ru": "Новое задание", "en": "New task"},
+    "form.edit_title": {"ru": "Редактирование задания", "en": "Editing task"},
+    "form.title_label": {"ru": "Название задания", "en": "Task title"},
+    "form.text_label": {"ru": "Описание (поддерживается markdown)", "en": "Description (markdown supported)"},
+    "form.files_label": {"ru": "Прикреплённые файлы (drag-n-drop или выбор)", "en": "Attached files (drag-n-drop or pick)"},
+    "form.drop_hint": {"ru": "Перетащите файлы сюда или кликните, чтобы выбрать", "en": "Drop files here or click to select"},
+    "form.keep_files": {"ru": "Оставшиеся файлы (снять галочку = удалить)", "en": "Existing files (uncheck to delete)"},
+    "form.create": {"ru": "Создать", "en": "Create"},
+    "form.save": {"ru": "Сохранить", "en": "Save"},
+    "form.cancel": {"ru": "Отмена", "en": "Cancel"},
+    "form.delete_selected": {"ru": "Удалить выбранные", "en": "Delete selected"},
+
+    "profile.contacts": {"ru": "Контакты", "en": "Contacts"},
+    "profile.no_contacts": {"ru": "Контактов нет", "en": "No contacts"},
+    "profile.add_contact": {"ru": "Добавить контакт", "en": "Add contact"},
+    "profile.service_placeholder": {"ru": "Сервис", "en": "Service"},
+    "profile.contact_placeholder": {"ru": "Контакт (@user, +7...)", "en": "Contact (@user, +7...)"},
+    "profile.remove": {"ru": "Удалить", "en": "Remove"},
+    "profile.upload_avatar": {"ru": "Загрузить аватар", "en": "Upload avatar"},
+    "profile.avatar_saved": {"ru": "Аватар сохранён", "en": "Avatar saved"},
+    "profile.contact_added": {"ru": "Контакт добавлен", "en": "Contact added"},
+    "profile.contact_removed": {"ru": "Контакт удалён", "en": "Contact removed"},
+    "profile.avatar_deleted": {"ru": "Аватар удалён", "en": "Avatar deleted"},
+    "profile.delete_avatar": {"ru": "Удалить аватар", "en": "Remove avatar"},
+    "profile.tab_inprogress": {"ru": "Выполняется", "en": "In progress"},
+    "profile.tab_completed": {"ru": "Завершённые", "en": "Completed"},
+    "profile.tab_posted": {"ru": "Размещённые", "en": "Posted"},
+    "profile.empty_inprogress": {"ru": "Нет выполняемых заданий", "en": "No tasks in progress"},
+    "profile.empty_completed": {"ru": "Нет завершённых заданий", "en": "No completed tasks"},
+    "profile.empty_posted": {"ru": "Нет размещённых заданий", "en": "No posted tasks"},
+    "profile.notifications": {"ru": "Уведомления", "en": "Notifications"},
+    "profile.no_notifications": {"ru": "Уведомлений нет", "en": "No notifications"},
+    "profile.mark_all_read": {"ru": "Прочитать все", "en": "Mark all read"},
+    "profile.delete_n": {"ru": "Удалить", "en": "Delete"},
+    "profile.mark_read": {"ru": "Прочитано", "en": "Mark read"},
+
+    "notify.respond": {"ru": "{user} откликнулся на ваше задание «{title}»", "en": "{user} responded to your task \"{title}\""},
+    "notify.refuse_author": {"ru": "Автор отказался от ваших услуг в задании «{title}»", "en": "The author refused your services on task \"{title}\""},
+    "notify.refuse_executor": {"ru": "Исполнитель {user} отказался от задания «{title}»", "en": "Executor {user} refused task \"{title}\""},
+    "notify.complete_request": {"ru": "{user} запросил завершение задания «{title}»", "en": "{user} requested completion of task \"{title}\""},
+    "notify.complete_accepted": {"ru": "Завершение задания «{title}» подтверждено", "en": "Completion of task \"{title}\" was confirmed"},
+    "notify.complete_rejected": {"ru": "Запрос на завершение задания «{title}» отклонён", "en": "The completion request for \"{title}\" was rejected"},
+}
+
+
+def get_lang(request):
+    lang = request.cookies.get("lang", "ru")
+    if lang not in LANGUAGES:
+        lang = "ru"
+    return lang
+
+
+def translate(lang, key, **kwargs):
+    entry = STRINGS.get(key, {})
+    text = entry.get(lang) or entry.get("ru") or key
+    if kwargs:
+        try:
+            text = text.format(**kwargs)
+        except (KeyError, IndexError):
+            pass
+    return text

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}{{ profile_user.username }} — {{ t('site.name') }}{% endblock %}
+{% block content %}
+<div class="profile-head card">
+  <img class="avatar" src="{{ avatar_url }}" alt="{{ profile_user.username }}">
+  <div class="profile-info">
+    <h1>{{ profile_user.username }}</h1>
+    <h3>{{ t('profile.contacts') }}</h3>
+    {% if contacts %}
+      <ul class="contacts">
+        {% for c in contacts %}<li><span class="svc">{{ c.service }}</span>{{ c.contact }}</li>{% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">{{ t('profile.no_contacts') }}</p>
+    {% endif %}
+  </div>
+</div>
+
+{% if is_self %}
+<div class="card avatar-form">
+  <h3>{{ t('profile.upload_avatar') }}</h3>
+  <form method="post" enctype="multipart/form-data" action="{{ url_for('upload_avatar', username=profile_user.username) }}" class="inline">
+    <input type="hidden" name="csrf" value="{{ g.csrf }}">
+    <input type="file" name="avatar" accept="image/png,image/jpeg,image/gif,image/webp">
+    <button type="submit" class="btn">{{ t('profile.upload_avatar') }}</button>
+  </form>
+  <form method="post" action="{{ url_for('upload_avatar', username=profile_user.username) }}" class="inline">
+    <input type="hidden" name="csrf" value="{{ g.csrf }}">
+    <input type="hidden" name="delete" value="1">
+    <button type="submit" class="btn danger">{{ t('profile.delete_avatar') }}</button>
+  </form>
+</div>
+
+<div class="card contacts-form">
+  <h3>{{ t('profile.contacts') }}</h3>
+  <form method="post" action="{{ url_for('add_contact', username=profile_user.username) }}" class="inline">
+    <input type="hidden" name="csrf" value="{{ g.csrf }}">
+    <input type="text" name="service" placeholder="{{ t('profile.service_placeholder') }}" required>
+    <input type="text" name="contact" placeholder="{{ t('profile.contact_placeholder') }}" required>
+    <button type="submit" class="btn">{{ t('profile.add_contact') }}</button>
+  </form>
+  {% for c in contacts %}
+  <form method="post" action="{{ url_for('remove_contact', username=profile_user.username) }}" class="inline contact-row">
+    <input type="hidden" name="csrf" value="{{ g.csrf }}">
+    <span class="grow"><span class="svc">{{ c.service }}</span> {{ c.contact }}</span>
+    <input type="hidden" name="service" value="{{ c.service }}">
+    <input type="hidden" name="contact" value="{{ c.contact }}">
+    <button type="submit" class="btn danger sm">{{ t('profile.remove') }}</button>
+  </form>
+  {% endfor %}
+</div>
+
+<div class="card notifications">
+  <div class="notif-head">
+    <h3>{{ t('profile.notifications') }} ({{ unread }})</h3>
+    {% if notifications %}
+    <form method="post" action="{{ url_for('notif_mark_all_read') }}" class="inline">
+      <input type="hidden" name="csrf" value="{{ g.csrf }}">
+      <button type="submit" class="link-btn">{{ t('profile.mark_all_read') }}</button>
+    </form>
+    {% endif %}
+  </div>
+  {% if notifications %}
+    <ul class="notif-list">
+      {% for n in notifications %}
+      <li class="{{ 'unread' if not n.is_read }}">
+        <span class="grow">{{ t(n.key, **n.params) }}</span>
+        <span class="muted">{{ n.created_at }}</span>
+        {% if not n.is_read %}
+        <form method="post" action="{{ url_for('notif_mark_read') }}" class="inline">
+          <input type="hidden" name="csrf" value="{{ g.csrf }}">
+          <input type="hidden" name="id" value="{{ n.id }}">
+          <button type="submit" class="link-btn">{{ t('profile.mark_read') }}</button>
+        </form>
+        {% endif %}
+        <form method="post" action="{{ url_for('notif_delete') }}" class="inline">
+          <input type="hidden" name="csrf" value="{{ g.csrf }}">
+          <input type="hidden" name="id" value="{{ n.id }}">
+          <button type="submit" class="link-btn danger-txt">{{ t('profile.delete_n') }}</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">{{ t('profile.no_notifications') }}</p>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="tabs">
+  <a href="{{ url_for('profile', username=profile_user.username) }}?tab=inprogress" class="{{ 'on' if tab == 'inprogress' }}">{{ t('profile.tab_inprogress') }}</a>
+  <a href="{{ url_for('profile', username=profile_user.username) }}?tab=completed" class="{{ 'on' if tab == 'completed' }}">{{ t('profile.tab_completed') }}</a>
+  <a href="{{ url_for('profile', username=profile_user.username) }}?tab=posted" class="{{ 'on' if tab == 'posted' }}">{{ t('profile.tab_posted') }}</a>
+</div>
+
+{% if user_tasks %}
+  <div class="cards">
+    {% for task in user_tasks %}
+    <article class="card task-card">
+      <a class="card-link" href="{{ url_for('task_page', task_id=task.id) }}">
+        <h3>{{ task.title }}</h3>
+      </a>
+      <div class="meta">
+        <span class="pill {{ task.status }}">{{ t('task.' ~ task.status) }}</span>
+        {% if task.status == 'booked' and task.booked_by %}<span class="muted">→ {{ task.booked_by }}</span>{% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty">{{ t('profile.empty_' ~ tab) }}</div>
+{% endif %}
+{% endblock %}

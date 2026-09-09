@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ t('site.name') }}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="logo" href="{{ url_for('index') }}">{{ t('site.name') }}</a>
+    <nav class="nav">
+      {% if g.user %}
+        <a href="{{ url_for('index') }}">{{ t('nav.home') }}</a>
+        <a href="{{ url_for('new_task') }}">{{ t('nav.new_task') }}</a>
+        <a href="{{ url_for('profile', username=g.user['username']) }}">
+          {{ t('nav.profile') }}{% if unread %}<span class="badge">{{ unread }}</span>{% endif %}
+        </a>
+        <form method="post" action="{{ url_for('logout') }}" class="inline">
+          <input type="hidden" name="csrf" value="{{ g.csrf }}">
+          <button class="link-btn" type="submit">{{ t('nav.logout') }}</button>
+        </form>
+      {% endif %}
+      <span class="lang">
+        <a href="{{ url_for('set_lang', lang='ru') }}" class="{{ 'on' if lang == 'ru' }}">RU</a>
+        <span class="sep">/</span>
+        <a href="{{ url_for('set_lang', lang='en') }}" class="{{ 'on' if lang == 'en' }}">EN</a>
+      </span>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flashes">
+        {% for m in messages %}<div class="flash">{{ t(m) }}</div>{% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

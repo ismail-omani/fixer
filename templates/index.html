@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="toolbar">
+  <form class="search" method="get" action="{{ url_for('completed' if mode == 'completed' else 'index') }}">
+    <input type="text" name="q" value="{{ q }}" placeholder="{{ t('index.search_placeholder') }}">
+    <button type="submit" class="btn">{{ t('index.search_btn') }}</button>
+  </form>
+  <a class="btn primary plus" href="{{ url_for('new_task') }}" title="{{ t('index.create') }}">+</a>
+</section>
+
+<div class="tabs">
+  <a href="{{ url_for('index') }}" class="{{ 'on' if mode == 'active' }}">{{ t('index.tab_active') }}</a>
+  <a href="{{ url_for('completed') }}" class="{{ 'on' if mode == 'completed' }}">{{ t('index.tab_completed') }}</a>
+</div>
+
+{% if task_list|length == 0 %}
+  <div class="empty">{{ t('index.empty_search' if q else ('index.empty_completed' if mode == 'completed' else 'index.empty_active')) }}</div>
+{% else %}
+  {% if q %}<p class="muted">{{ t('index.results', count=task_list|length) }}</p>{% endif %}
+  <div class="cards">
+    {% for task in task_list %}
+    <article class="card task-card">
+      <a class="card-link" href="{{ url_for('task_page', task_id=task.id) }}">
+        <h3>{{ task.title }}</h3>
+      </a>
+      <div class="meta">
+        <span class="task-id">{{ task.id }}</span>
+        {% if task.status == 'booked' %}
+          <span class="pill booked">{{ t('index.booked') }} · {{ task.booked_by }}</span>
+        {% elif task.status == 'completed' %}
+          <span class="pill done">{{ t('index.completed') }} · {{ task.booked_by }}</span>
+        {% else %}
+          <span class="pill free">{{ t('task.free') }}</span>
+        {% endif %}
+      </div>
+      <div class="card-actions">
+        {% if task.status == 'active' and g.user and task.author != g.user['username'] and not task.refusals|selectattr('username', 'equalto', g.user['username'])|list %}
+          <form method="post" action="{{ url_for('respond', task_id=task.id) }}">
+            <input type="hidden" name="csrf" value="{{ g.csrf }}">
+            <button type="submit" class="btn primary sm">{{ t('task.respond') }}</button>
+          </form>
+        {% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}
