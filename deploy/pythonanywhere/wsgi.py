@@ -1,7 +1,7 @@
 import os
 import sys
 
-path = "/home/<your-login>/fixer"
+path = "/home/fixer/fixer"
 if path not in sys.path:
     sys.path.insert(0, path)
 
