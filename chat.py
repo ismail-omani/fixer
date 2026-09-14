@@ -47,6 +47,16 @@ def get_or_create(user1_id, user2_id):
     return conv_id
 
 
+def has_conversation(user1_id, user2_id):
+    user_a, user_b = sorted((user1_id, user2_id))
+    conn = db.get_db()
+    row = conn.execute(
+        "SELECT id FROM conversations WHERE user_a = ? AND user_b = ?", (user_a, user_b)
+    ).fetchone()
+    conn.close()
+    return bool(row)
+
+
 def conversation(conv_id):
     conn = db.get_db()
     row = conn.execute("SELECT * FROM conversations WHERE id = ?", (conv_id,)).fetchone()

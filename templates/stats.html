@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ t('top.title') }}{% endblock %}
+{% block content %}
+<h1>{{ t('top.title') }}</h1>
+{% if rows %}
+  <table class="score">
+    <thead>
+      <tr><th>#</th><th>{{ t('task.author') }}</th><th>{{ t('top.completed') }}</th><th>{{ t('top.inprogress') }}</th></tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td><a href="{{ url_for('profile', username=r.username) }}">{{ r.username }}</a></td>
+        <td>{{ r.done }}</td>
+        <td>{{ r.active }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p class="muted">{{ t('top.empty') }}</p>
+{% endif %}
+{% endblock %}

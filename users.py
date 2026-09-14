@@ -110,6 +110,23 @@ def default_avatar_svg(username):
 
 # ---------- notifications ----------
 
+def search_users(query, limit=50):
+    conn = db.get_db()
+    q = (query or "").strip()
+    if q:
+        escaped = q.replace("\\", "\\\\").replace("%", r"\%").replace("_", r"\_")
+        rows = conn.execute(
+            "SELECT id, username FROM users WHERE username LIKE ? ESCAPE '\\' LIMIT ?",
+            (f"%{escaped}%", limit),
+        ).fetchall()
+    else:
+        rows = conn.execute(
+            "SELECT id, username FROM users ORDER BY username LIMIT ?", (limit,)
+        ).fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+
 def add_notification(user_id, key, **params):
     conn = db.get_db()
     conn.execute(

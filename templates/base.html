@@ -4,6 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ t('site.name') }}{% endblock %}</title>
+  <script>
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("fixer-theme"); } catch (e) {}
+      if (!t) t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      document.documentElement.dataset.theme = t;
+    })();
+  </script>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -15,6 +23,7 @@
         <a href="{{ url_for('index') }}">{{ t('nav.home') }}</a>
         <a href="{{ url_for('new_task') }}">{{ t('nav.new_task') }}</a>
         <a href="{{ url_for('chat_list') }}">{{ t('nav.chat') }}{% if chat_unread %}<span class="badge">{{ chat_unread }}</span>{% endif %}</a>
+        <a href="{{ url_for('top') }}">{{ t('nav.top') }}</a>
         <a href="{{ url_for('profile', username=g.user['username']) }}">
           {{ t('nav.profile') }}{% if unread %}<span class="badge">{{ unread }}</span>{% endif %}
         </a>
@@ -23,12 +32,19 @@
           <button class="link-btn" type="submit">{{ t('nav.logout') }}</button>
         </form>
       {% endif %}
-      <span class="lang">
-        <a href="{{ url_for('set_lang', lang='ru') }}" class="{{ 'on' if lang == 'ru' }}">RU</a>
-        <span class="sep">/</span>
-        <a href="{{ url_for('set_lang', lang='en') }}" class="{{ 'on' if lang == 'en' }}">EN</a>
-      </span>
     </nav>
+    <div class="menubox">
+      <button class="hamburger" id="menu-btn" type="button" aria-label="Menu">☰</button>
+      <div class="menu" id="menu">
+        <div class="menu-row">
+          <a href="{{ url_for('set_lang', lang='ru') }}" class="menu-link {{ 'on' if lang == 'ru' }}">RU</a>
+          <span class="sep">/</span>
+          <a href="{{ url_for('set_lang', lang='en') }}" class="menu-link {{ 'on' if lang == 'en' }}">EN</a>
+        </div>
+        <button class="menu-row theme-toggle" id="theme-toggle" type="button"
+                data-label="{{ t('menu.theme') }}"></button>
+      </div>
+    </div>
   </div>
 </header>
 <main class="wrap">

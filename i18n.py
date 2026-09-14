@@ -8,6 +8,7 @@ STRINGS = {
     "nav.chat": {"ru": "Чаты", "en": "Messages"},
     "nav.logout": {"ru": "Выйти", "en": "Logout"},
     "nav.login": {"ru": "Войти", "en": "Log in"},
+    "nav.top": {"ru": "Топ", "en": "Top"},
 
     "auth.tab_login": {"ru": "Вход", "en": "Login"},
     "auth.tab_register": {"ru": "Регистрация", "en": "Register"},
@@ -140,6 +141,17 @@ STRINGS = {
     "chat.download": {"ru": "Скачать", "en": "Download"},
     "chat.not_found": {"ru": "Пользователь не найден", "en": "User not found"},
     "chat.you": {"ru": "Вы", "en": "You"},
+    "chat.search_placeholder": {"ru": "Поиск юзеров…", "en": "Search users…"},
+    "chat.existing_chat": {"ru": "Есть чат", "en": "Existing chat"},
+    "chat.no_results": {"ru": "Никого не найдено", "en": "No users found"},
+    "chat.remove_file": {"ru": "Удалить файл", "en": "Remove file"},
+
+    "top.title": {"ru": "Лучшие исполнители", "en": "Top executors"},
+    "top.empty": {"ru": "Пока нет завершённых заданий", "en": "No completed tasks yet"},
+    "top.completed": {"ru": "Завершено", "en": "Completed"},
+    "top.inprogress": {"ru": "В работе", "en": "In progress"},
+
+    "menu.theme": {"ru": "Тема", "en": "Theme"},
 }
 
 

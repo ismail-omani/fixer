@@ -323,3 +323,32 @@ def user_tasks(username, role, statuses):
             out.append(meta)
     out.sort(key=lambda t: t["created_at"], reverse=True)
     return out
+
+
+def top_executors(limit=10):
+    os.makedirs(TASKS_DIR, exist_ok=True)
+    counts = {}
+    for name in os.listdir(TASKS_DIR):
+        meta = load_task(name)
+        if not meta or meta["status"] not in ("booked", "completed"):
+            continue
+        key = meta.get("booked_by")
+        if not key:
+            continue
+        entry = counts.setdefault(key, {"done": 0, "active": 0})
+        if meta["status"] == "completed":
+            entry["done"] += 1
+        else:
+            entry["active"] += 1
+    rows = sorted(
+        counts.items(),
+        key=lambda kv: (-kv[1]["done"], kv[0].lower()),
+    )
+    out = []
+    for username, c in rows:
+        if c["done"] == 0:
+            continue
+        out.append({"username": username, "done": c["done"], "active": c["active"]})
+        if len(out) >= limit:
+            break
+    return out

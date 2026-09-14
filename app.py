@@ -29,6 +29,7 @@ from flask import (
     abort,
     flash,
     g,
+    make_response,
     redirect,
     render_template,
     request,
@@ -236,11 +237,16 @@ def logout():
 
 # ---------- pages ----------
 
+def _task_list(mode, q):
+    statuses = {"active", "booked"} if mode == "active" else {"completed"}
+    return tasks.list_tasks(statuses, q)
+
+
 @app.route("/")
 @login_required
 def index():
     q = request.args.get("q", "").strip()
-    task_list = tasks.list_tasks({"active", "booked"}, q)
+    task_list = _task_list("active", q)
     return render_template("index.html", task_list=task_list, q=q, mode="active")
 
 
@@ -248,8 +254,27 @@ def index():
 @login_required
 def completed():
     q = request.args.get("q", "").strip()
-    task_list = tasks.list_tasks({"completed"}, q)
+    task_list = _task_list("completed", q)
     return render_template("index.html", task_list=task_list, q=q, mode="completed")
+
+
+@app.route("/feed")
+@login_required
+def feed():
+    mode = request.args.get("mode", "active")
+    if mode not in ("active", "completed"):
+        mode = "active"
+    q = request.args.get("q", "").strip()
+    task_list = _task_list(mode, q)
+    resp = make_response(render_template("_feed.html", task_list=task_list, q=q, mode=mode))
+    resp.headers["Cache-Control"] = "no-store"
+    return resp
+
+
+@app.route("/top")
+@login_required
+def top():
+    return render_template("stats.html", rows=tasks.top_executors(10))
 
 
 @app.route("/tasks/<task_id>")
@@ -523,6 +548,25 @@ def notif_delete():
 def chat_list():
     convs = chat.conversations_for(g.user["id"])
     return render_template("chat.html", convs=convs)
+
+
+@app.route("/chat/search")
+@login_required
+def chat_search():
+    q = request.args.get("q", "").strip()
+    me = g.user["id"]
+    out = []
+    for u in users.search_users(q):
+        if u["id"] == me:
+            continue
+        has = chat.has_conversation(me, u["id"])
+        unread = 0
+        if has:
+            conv_id = chat.get_or_create(me, u["id"])
+            unread = chat.unread_count(conv_id, me)
+        out.append({"username": u["username"], "has_chat": has, "unread": unread})
+    out.sort(key=lambda x: (not x["has_chat"], x["username"].lower()))
+    return {"users": out}
 
 
 def _conv_with(username):
