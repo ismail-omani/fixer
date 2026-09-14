@@ -277,12 +277,20 @@ fieldset { border: 1px solid var(--line); border-radius: 8px; margin-bottom: 14p
   box-shadow: var(--shadow);
 }
 .menu.open { display: block; }
-.menu-row { display: flex; align-items: center; gap: 8px; padding: 8px 10px; }
-.menu-row + .menu-row { border-top: 1px solid var(--line); }
+.menu-item {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 10px; color: var(--text); text-decoration: none; font-size: 14px;
+  border: none; background: none; cursor: pointer; text-align: left;
+}
+.menu-item + .menu-item { border-top: 1px solid var(--line); }
+.menu-item:hover { color: var(--primary); }
+.menu-item .badge { margin-left: auto; }
+.menu-row { display: flex; align-items: center; gap: 8px; padding: 10px; border-top: 1px solid var(--line); }
 .menu-link { color: var(--muted); text-decoration: none; font-size: 14px; }
 .menu-link.on { color: var(--primary); font-weight: 700; }
 .menu .sep { color: var(--muted); }
-.theme-toggle { background: none; border: none; cursor: pointer; color: var(--text); font-size: 14px; }
+.theme-toggle { color: var(--text); }
+.theme-toggle:hover { color: var(--primary); }
 
 /* chat user search */
 .search-input {
