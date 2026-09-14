@@ -179,3 +179,30 @@ def delete_notification(notif_id, user_id):
     )
     conn.commit()
     conn.close()
+
+
+def mark_message_notifications_read(user_id, sender_username):
+    conn = db.get_db()
+    rows = conn.execute(
+        "SELECT id, payload FROM notifications WHERE user_id = ? AND type = ? AND is_read = 0",
+        (user_id, "notify.message"),
+    ).fetchall()
+    conn.close()
+    ids = []
+    for row in rows:
+        try:
+            params = json.loads(row["payload"])
+        except ValueError:
+            continue
+        if params.get("user") == sender_username:
+            ids.append(row["id"])
+    if not ids:
+        return
+    q = ",".join("?" * len(ids))
+    conn = db.get_db()
+    conn.execute(
+        f"UPDATE notifications SET is_read = 1 WHERE id IN ({q}) AND user_id = ?",
+        (*ids, user_id),
+    )
+    conn.commit()
+    conn.close()

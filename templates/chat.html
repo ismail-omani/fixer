@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ t('chat.title') }}{% endblock %}
+{% block content %}
+<h1>{{ t('chat.title') }}</h1>
+{% if convs %}
+  <ul class="chat-list">
+    {% for c in convs %}
+      <li>
+        <a href="{{ url_for('chat_conversation', username=c.other_name) }}" class="chat-item {{ 'has-unread' if c.unread }}">
+          <span class="chat-name">
+            {{ c.other_name }}{% if c.unread %}<span class="badge">{{ c.unread }}</span>{% endif %}
+          </span>
+          {% if c.last %}
+            <span class="chat-last">{{ c.last.sender_name }}{% if c.last.mine %} ({{ t('chat.you') }}){% endif %}: {% if c.last.attachment %}📎{% endif %}{{ c.last.body }}</span>
+            <span class="chat-time">{{ (c.last.created_at or '').replace('T', ' ')[:16] }}</span>
+          {% endif %}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="muted">{{ t('chat.empty') }}</p>
+{% endif %}
+{% endblock %}

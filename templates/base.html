@@ -14,6 +14,7 @@
       {% if g.user %}
         <a href="{{ url_for('index') }}">{{ t('nav.home') }}</a>
         <a href="{{ url_for('new_task') }}">{{ t('nav.new_task') }}</a>
+        <a href="{{ url_for('chat_list') }}">{{ t('nav.chat') }}{% if chat_unread %}<span class="badge">{{ chat_unread }}</span>{% endif %}</a>
         <a href="{{ url_for('profile', username=g.user['username']) }}">
           {{ t('nav.profile') }}{% if unread %}<span class="badge">{{ unread }}</span>{% endif %}
         </a>

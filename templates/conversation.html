@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}{{ t('chat.with') }} {{ other_user.username }}{% endblock %}
+{% block content %}
+<div class="chat-page card" data-other="{{ other_user.username }}"
+     data-last="{{ last_msg_id }}" data-csrf="{{ g.csrf }}">
+  <div class="chat-head">
+    <a href="{{ url_for('chat_list') }}">← {{ t('chat.title') }}</a>
+    <a href="{{ url_for('profile', username=other_user.username) }}">{{ t('chat.with') }} {{ other_user.username }}</a>
+  </div>
+
+  <div class="chat-thread" id="chat-thread">
+    {% for m in messages %}
+      <div class="msg {{ 'mine' if m.mine }}" id="msg-{{ m.id }}">
+        <div class="bubble">
+          <div class="msg-body">{{ m.body }}</div>
+          {% if m.attachment %}
+            <div class="msg-file">
+              <a href="{{ url_for('chat_attachment', username=other_user.username, name=m.attachment) }}" download>
+                📎 {{ m.attachment }}
+              </a>
+            </div>
+          {% endif %}
+          <div class="msg-time">{{ (m.created_at or '').replace('T', ' ')[:16] }}</div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <form method="post" enctype="multipart/form-data" action="{{ url_for('chat_conversation', username=other_user.username) }}" class="chat-form" id="chat-form">
+    <input type="hidden" name="csrf" value="{{ g.csrf }}">
+    <textarea name="body" id="chat-body" rows="2" placeholder="{{ t('chat.placeholder') }}"></textarea>
+    <div class="chat-tools">
+      <label class="btn sm">{{ t('chat.attach') }}📎
+        <input type="file" name="attachment" id="chat-file" hidden>
+      </label>
+      <span class="muted" id="chat-file-name"></span>
+      <button type="submit" class="btn">{{ t('chat.send') }}</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

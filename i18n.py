@@ -5,6 +5,7 @@ STRINGS = {
     "nav.home": {"ru": "Главная", "en": "Home"},
     "nav.new_task": {"ru": "+ Задание", "en": "+ Task"},
     "nav.profile": {"ru": "Профиль", "en": "Profile"},
+    "nav.chat": {"ru": "Чаты", "en": "Messages"},
     "nav.logout": {"ru": "Выйти", "en": "Logout"},
     "nav.login": {"ru": "Войти", "en": "Log in"},
 
@@ -127,6 +128,18 @@ STRINGS = {
     "notify.complete_request": {"ru": "{user} запросил завершение задания «{title}»", "en": "{user} requested completion of task \"{title}\""},
     "notify.complete_accepted": {"ru": "Завершение задания «{title}» подтверждено", "en": "Completion of task \"{title}\" was confirmed"},
     "notify.complete_rejected": {"ru": "Запрос на завершение задания «{title}» отклонён", "en": "The completion request for \"{title}\" was rejected"},
+    "notify.message": {"ru": "{user}: {body}", "en": "{user}: {body}"},
+
+    "chat.title": {"ru": "Чаты", "en": "Messages"},
+    "chat.empty": {"ru": "Диалогов пока нет. Напишите первому из чьего-нибудь профиля!", "en": "No conversations yet. Write to someone from their profile!"},
+    "chat.write": {"ru": "Сообщение", "en": "Message"},
+    "chat.with": {"ru": "Чат с", "en": "Chat with"},
+    "chat.placeholder": {"ru": "Сообщение…", "en": "Message…"},
+    "chat.send": {"ru": "Отправить", "en": "Send"},
+    "chat.attach": {"ru": "Прикрепить файл", "en": "Attach file"},
+    "chat.download": {"ru": "Скачать", "en": "Download"},
+    "chat.not_found": {"ru": "Пользователь не найден", "en": "User not found"},
+    "chat.you": {"ru": "Вы", "en": "You"},
 }
 
 

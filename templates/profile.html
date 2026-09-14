@@ -13,6 +13,9 @@
     {% else %}
       <p class="muted">{{ t('profile.no_contacts') }}</p>
     {% endif %}
+    {% if not is_self %}
+      <a class="btn" href="{{ url_for('chat_conversation', username=profile_user.username) }}">{{ t('chat.write') }}</a>
+    {% endif %}
   </div>
 </div>
 

@@ -28,6 +28,24 @@ CREATE TABLE IF NOT EXISTS notifications (
     is_read INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS conversations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_a INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_b INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_a_read_id INTEGER NOT NULL DEFAULT 0,
+    user_b_read_id INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    conversation_id INTEGER NOT NULL REFERENCES conversations(id) ON DELETE CASCADE,
+    sender_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    body TEXT NOT NULL DEFAULT '',
+    attachment TEXT,
+    created_at TEXT NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_conversations_pair ON conversations(user_a, user_b);
+CREATE INDEX IF NOT EXISTS idx_messages_conv ON messages(conversation_id);
 """
 
 

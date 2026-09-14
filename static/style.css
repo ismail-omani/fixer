@@ -182,3 +182,30 @@ fieldset { border: 1px solid var(--line); border-radius: 8px; margin-bottom: 14p
 .contact-row input[type="text"]:first-of-type { flex: 0 0 32%; }
 .contact-row .plus, .contact-row .minus { flex: 0 0 auto; width: 38px; height: 38px; padding: 0; font-size: 16px; line-height: 1; }
 .minus.hidden, .plus.hidden { display: none; }
+
+/* chat */
+.chat-list { list-style: none; padding: 0; margin: 0; }
+.chat-list li { border-bottom: 1px solid var(--line); }
+.chat-list li:last-child { border-bottom: none; }
+.chat-item { display: flex; flex-direction: column; gap: 2px; padding: 12px 4px; text-decoration: none; color: var(--text); }
+.chat-item:hover { color: var(--primary); }
+.chat-name { font-weight: 600; }
+.chat-last { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.chat-time { color: var(--muted); font-size: 11px; }
+
+.chat-page { display: flex; flex-direction: column; max-height: 80vh; }
+.chat-head { display: flex; justify-content: space-between; align-items: center; padding: 4px 0 12px; border-bottom: 1px solid var(--line); }
+.chat-thread { flex: 1; overflow-y: auto; padding: 14px 4px; display: flex; flex-direction: column; gap: 10px; }
+.msg { display: flex; }
+.msg.mine { justify-content: flex-end; }
+.bubble { max-width: 72%; background: var(--line); border-radius: 12px; padding: 8px 12px; }
+.msg.mine .bubble { background: var(--primary); color: #fff; }
+.msg-body { word-break: break-word; white-space: pre-wrap; }
+.msg-file { margin-top: 4px; font-size: 13px; }
+.msg-file a { color: inherit; text-decoration: underline; }
+.msg-time { margin-top: 3px; font-size: 10px; opacity: 0.65; }
+.chat-form { border-top: 1px solid var(--line); padding-top: 10px; }
+.chat-form textarea { width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; font-family: inherit; resize: vertical; }
+.chat-tools { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+.chat-tools .btn { margin-left: auto; }
+.chat-tools label.btn { cursor: pointer; }

@@ -37,6 +37,7 @@ from flask import (
 )
 
 import auth
+import chat
 import db
 import i18n
 import tasks
@@ -112,14 +113,16 @@ def load_user():
 @app.context_processor
 def inject_globals():
     unread = 0
+    chat_unread = 0
     if g.get("user"):
         unread = users.unread_count(g.user["id"])
+        chat_unread = chat.total_unread(g.user["id"])
     lang = get_lang()
 
     def t(key, **kwargs):
         return i18n.translate(lang, key, **kwargs)
 
-    return {"t": t, "lang": lang, "unread": unread}
+    return {"t": t, "lang": lang, "unread": unread, "chat_unread": chat_unread}
 
 
 def login_required(fn):
@@ -513,10 +516,130 @@ def notif_delete():
     return redirect(url_for("profile", username=g.user["username"]))
 
 
+# ---------- chat ----------
+
+@app.route("/chat")
+@login_required
+def chat_list():
+    convs = chat.conversations_for(g.user["id"])
+    return render_template("chat.html", convs=convs)
+
+
+def _conv_with(username):
+    user = db.get_user(username)
+    if not user:
+        return None, None
+    me = g.user["id"]
+    if user["id"] == me:
+        return None, None
+    conv_id = chat.get_or_create(me, user["id"])
+    return conv_id, user
+
+
+@app.route("/chat/<username>", methods=["GET", "POST"])
+@login_required
+def chat_conversation(username):
+    conv_id, user = _conv_with(username)
+    if not conv_id or not user:
+        abort(404)
+    conv = chat.conversation(conv_id)
+    if not chat.is_participant(conv, g.user["id"]):
+        abort(403)
+    if request.method == "POST":
+        body = request.form.get("body", "")
+        file_storage = request.files.get("attachment")
+        msg_id, err = chat.send(conv_id, g.user["id"], body, file_storage)
+        xhr = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+        if err:
+            if xhr:
+                return {"error": i18n.translate(get_lang(), err)}
+            flash(err)
+        else:
+            chat.mark_read(conv_id, g.user["id"])
+            other_name = user["username"]
+            other_id = db.get_user_id(other_name)
+            if other_id:
+                preview = (body or "📎")[:80]
+                users.add_notification(other_id, "notify.message", user=g.user["username"], body=preview)
+            if xhr:
+                new_msg = chat.new_messages(conv_id, msg_id - 1)
+                m = [x for x in new_msg if x["id"] == msg_id]
+                if not m:
+                    return {"error": "reload"}
+                m = m[0]
+                return {"message": {
+                    "id": m["id"],
+                    "sender": m["sender_name"],
+                    "mine": True,
+                    "body": m["body"],
+                    "attachment": m["attachment"],
+                    "time": (m["created_at"] or "").replace("T", " ")[:16],
+                }}
+        return redirect(url_for("chat_conversation", username=username))
+    chat.mark_read(conv_id, g.user["id"])
+    users.mark_message_notifications_read(g.user["id"], user["username"])
+    msgs = chat.messages(conv_id)
+    for m in msgs:
+        m["mine"] = m["sender_id"] == g.user["id"]
+    return render_template(
+        "conversation.html",
+        other_user=user,
+        messages=msgs,
+        conversation_id=conv_id,
+        last_msg_id=msgs[-1]["id"] if msgs else 0,
+    )
+
+
+@app.route("/chat/<username>/poll")
+@login_required
+def chat_poll(username):
+    conv_id, _ = _conv_with(username)
+    if not conv_id:
+        return {"messages": []}
+    conv = chat.conversation(conv_id)
+    if not chat.is_participant(conv, g.user["id"]):
+        abort(403)
+    after = request.args.get("after", "0")
+    try:
+        after_id = int(after)
+    except ValueError:
+        after_id = 0
+    out = []
+    for m in chat.new_messages(conv_id, after_id):
+        m["mine"] = m["sender_id"] == g.user["id"]
+        m["time"] = (m["created_at"] or "").replace("T", " ")[:16]
+        name = m.pop("sender_name", "")
+        out.append({
+            "id": m["id"],
+            "sender": name,
+            "mine": m["mine"],
+            "body": m["body"],
+            "attachment": m["attachment"],
+            "time": m["time"],
+        })
+    return {"messages": out}
+
+
+@app.route("/chat/<username>/attachment/<name>")
+@login_required
+def chat_attachment(username, name):
+    conv_id, _ = _conv_with(username)
+    if not conv_id:
+        abort(404)
+    conv = chat.conversation(conv_id)
+    if not chat.is_participant(conv, g.user["id"]):
+        abort(403)
+    path = chat.attachment_path(conv_id, name)
+    if not path:
+        abort(404)
+    return send_from_directory(chat.conv_files_dir(conv_id), os.path.basename(path), as_attachment=True)
+
+
 def bootstrap():
     db.init_db()
     os.makedirs(os.path.join(BASE, "tasks"), exist_ok=True)
     os.makedirs(os.path.join(BASE, "u"), exist_ok=True)
+    os.makedirs(os.path.join(BASE, "chat_files"), exist_ok=True)
     auth.purge_expired_sessions()
 
 
