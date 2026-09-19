@@ -5,4 +5,14 @@ server.log
 .env
 tasks/
 u/
+chat_files/
 *.pyc
+
+# Android
+android/.gradle/
+android/.idea/
+android/build/
+android/app/build/
+android/local.properties
+android/captures/
+*.apk
