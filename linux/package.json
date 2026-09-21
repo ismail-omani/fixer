@@ -1,0 +1,33 @@
+{
+  "name": "fixer",
+  "productName": "Fixer",
+  "description": "Fixer — приложение для задания и чата (fixer.pythonanywhere.com)",
+  "author": "Ismail",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --linux AppImage"
+  },
+  "build": {
+    "appId": "com.ismail.fixer",
+    "productName": "Fixer",
+    "files": [
+      "main.js"
+    ],
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "icon.png",
+      "category": "Network;Chat",
+      "maintainer": "Ismail",
+      "synopsis": "Fixer — задания и чат"
+    }
+  },
+  "devDependencies": {
+    "electron": "^44.4.3",
+    "electron-builder": "^26.15.3"
+  }
+}
